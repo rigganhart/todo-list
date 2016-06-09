@@ -15,7 +15,7 @@ var toDoPage = {
   events: function(){
 
   //subit item to do event
-$('form button[name="add"]').on('click', function(event){
+$('form ').on('submit', function(event){
   event.preventDefault();
   var newToDo = {
     content: $('input[name="toDo"]').val()
@@ -45,6 +45,22 @@ $(document).on('click', 'a',function(event){
       toDoPage.deleteToDo(toDoId);
 
   })
+// update a todo item
+$(document).on('dblclick', 'li', function(event){
+  event.preventDefault();
+  var updateId = $(this).data('id');
+  $(this).text('').replaceWith('<form><input name="update"></form>')
+  $('li form').on('submit', function(event) {
+    event.preventDefault();
+    var updateContent = {
+      content: $('input[name="update"]').val()
+    };
+      console.log(newToDo);
+      toDoPage.updateToDo(updateId);
+
+  })
+})
+
 
 },
 //end of events
@@ -66,8 +82,20 @@ getToDo: function () {
   })
 },
 
-updateToDo: function () {
-
+updateToDo: function (updateId) {
+  $.ajax({
+    method: "PUT",
+    url: toDoPage.url + "/" + updateId,
+    data: updateContent,
+    success: function(data){
+      $('.read ul').append(`<li><input type='checkbox'> ${newToDo.content} </li>`);
+      console.log("updated YAY!", data);
+      toDoPage.getToDo();
+    },
+    error: function (err) {
+      console.log("updating sucks", err);
+    }
+  })
 
 },
 
