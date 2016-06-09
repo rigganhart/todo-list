@@ -18,9 +18,11 @@ var toDoPage = {
 $('form ').on('submit', function(event){
   event.preventDefault();
   var newToDo = {
-    content: $('input[name="toDo"]').val()
+    content: $('input[name="toDo"]').val(),
+
   };
   console.log(newToDo);
+  $('.read ul').append(`<li><input type='checkbox'> ${newToDo.content} </li>`);
   $.ajax({
     url: 'http://tiny-tiny.herokuapp.com/collections/riggantodo',
     method: "POST",
@@ -43,7 +45,7 @@ $(document).on('click', 'a',function(event){
       var toDoId = $(this).parent().data('id');
       console.log(toDoId);
       toDoPage.deleteToDo(toDoId);
-
+      $(this).remove();
   })
 // update a todo item
 $(document).on('dblclick', 'li', function(event){
@@ -56,7 +58,7 @@ $(document).on('dblclick', 'li', function(event){
       content: $('input[name="update"]').val()
     };
       console.log(newToDo);
-      toDoPage.updateToDo(updateId);
+      toDoPage.updateToDo(updateContent);
 
   })
 })
@@ -82,7 +84,7 @@ getToDo: function () {
   })
 },
 
-updateToDo: function (updateId) {
+updateToDo: function (updateContent) {
   $.ajax({
     method: "PUT",
     url: toDoPage.url + "/" + updateId,
